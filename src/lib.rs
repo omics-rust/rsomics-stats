@@ -11,6 +11,7 @@
 
 pub mod combine;
 pub mod fdr;
+pub mod hwe;
 pub mod hypothesis;
 
 pub use combine::{fisher_combine, stouffer_combine};
@@ -18,6 +19,7 @@ pub use fdr::{
     bh_adjust, bonferroni_adjust, by_adjust, hochberg_adjust, holm_adjust, hommel_adjust,
     none_adjust,
 };
+pub use hwe::hwe_exact;
 pub use hypothesis::{Alternative, fisher_exact_2x2, mann_whitney_u, welch_t};
 
 #[derive(Debug, thiserror::Error)]
