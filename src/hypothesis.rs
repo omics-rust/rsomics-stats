@@ -154,8 +154,7 @@ pub fn fisher_exact_2x2(a: u64, b: u64, c: u64, d: u64, alt: Alternative) -> Res
                     total += log_pk.exp();
                 }
                 if k < hi {
-                    log_pk += ((kk - k) as f64).ln()
-                        + ((nn - k) as f64).ln()
+                    log_pk += ((kk - k) as f64).ln() + ((nn - k) as f64).ln()
                         - ((k + 1) as f64).ln()
                         - ((d + k + 1) as f64).ln();
                 }
@@ -167,8 +166,7 @@ pub fn fisher_exact_2x2(a: u64, b: u64, c: u64, d: u64, alt: Alternative) -> Res
                 log_pk = observed_log_p;
                 for k in (lo..observed).rev() {
                     // Advance to k: we are stepping from k+1 back to k.
-                    log_pk += ((k + 1) as f64).ln()
-                        + ((d + k + 1) as f64).ln()
+                    log_pk += ((k + 1) as f64).ln() + ((d + k + 1) as f64).ln()
                         - ((kk - k) as f64).ln()
                         - ((nn - k) as f64).ln();
                     if log_pk <= observed_log_p + 1e-12 {
