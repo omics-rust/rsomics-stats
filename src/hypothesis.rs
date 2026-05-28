@@ -127,7 +127,14 @@ pub fn fisher_exact_2x2(a: u64, b: u64, c: u64, d: u64, alt: Alternative) -> Res
     let observed = a;
     let p = match alt {
         Alternative::Less => hyper.cdf(observed),
-        Alternative::Greater => 1.0 - hyper.cdf(observed.saturating_sub(1)),
+        // P(X >= observed): when observed=0, every outcome qualifies, so p=1.
+        Alternative::Greater => {
+            if observed == 0 {
+                1.0
+            } else {
+                1.0 - hyper.cdf(observed - 1)
+            }
+        }
         Alternative::TwoSided => {
             let observed_p = pmf(&hyper, observed);
             let mut total = 0.0;
