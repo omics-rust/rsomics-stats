@@ -136,14 +136,44 @@ pub fn fisher_exact_2x2(a: u64, b: u64, c: u64, d: u64, alt: Alternative) -> Res
             }
         }
         Alternative::TwoSided => {
-            let observed_p = pmf(&hyper, observed);
-            let mut total = 0.0;
             let lo = nn.saturating_sub(n.saturating_sub(kk));
             let hi = nn.min(kk);
-            for k in lo..=hi {
-                let pk = pmf(&hyper, k);
-                if pk <= observed_p + 1e-12 {
-                    total += pk;
+            // Use log-space recurrence to avoid underflow over the full support range.
+            // Recurrence (log-PMF form):
+            //   log P(k+1) = log P(k) + log(kk-k) + log(nn-k) - log(k+1) - log(d+k+1)
+            // Start from `observed` (guaranteed in-range and representable) and propagate
+            // outward in both directions, collecting contributions ≤ observed probability.
+            let d = n - kk - nn; // n - kk - nn = b+d-b = d ≥ 0 by construction
+            let observed_log_p = pmf(&hyper, observed).ln();
+            let mut total = 0.0_f64;
+
+            // Rightward sweep: from observed to hi.
+            let mut log_pk = observed_log_p;
+            for k in observed..=hi {
+                if log_pk <= observed_log_p + 1e-12 {
+                    total += log_pk.exp();
+                }
+                if k < hi {
+                    log_pk += ((kk - k) as f64).ln()
+                        + ((nn - k) as f64).ln()
+                        - ((k + 1) as f64).ln()
+                        - ((d + k + 1) as f64).ln();
+                }
+            }
+
+            // Leftward sweep: from observed-1 down to lo (reverse recurrence).
+            // log P(k-1) = log P(k) + log(k) + log(d+k) - log(kk-k+1) - log(nn-k+1)
+            if observed > lo {
+                log_pk = observed_log_p;
+                for k in (lo..observed).rev() {
+                    // Advance to k: we are stepping from k+1 back to k.
+                    log_pk += ((k + 1) as f64).ln()
+                        + ((d + k + 1) as f64).ln()
+                        - ((kk - k) as f64).ln()
+                        - ((nn - k) as f64).ln();
+                    if log_pk <= observed_log_p + 1e-12 {
+                        total += log_pk.exp();
+                    }
                 }
             }
             total
