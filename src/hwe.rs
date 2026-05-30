@@ -4,20 +4,9 @@
 /// implements the Wigginton recursion. Treats each alt allele independently
 /// against the reference, using only diploid biallelic counts.
 ///
-/// # Arguments
-/// * `nref` — number of reference allele copies among genotyped samples
-///   (`2 * n_hom_ref + n_het`)
-/// * `nalt` — number of alt allele copies (`2 * n_hom_alt + n_het`)
-/// * `nhet` — count of heterozygous samples
-///
-/// # Returns
-/// `(p_hwe, p_exc_het)` where:
-/// * `p_hwe` — two-tailed HWE p-value (probability of observations as or more
-///   unlikely than observed under HWE)
-/// * `p_exc_het` — one-tailed excess-heterozygosity p-value (probability of
-///   observing as many or more hets than seen)
-///
-/// Returns `(1.0, 1.0)` when there is no variation (`nref == 0 || nalt == 0`).
+/// Returns `(p_hwe, p_exc_het)`: two-tailed HWE p-value and one-tailed
+/// excess-heterozygosity p-value. Returns `(1.0, 1.0)` when there is no
+/// variation (`nref == 0 || nalt == 0`).
 pub fn hwe_exact(nref: u32, nalt: u32, nhet: u32) -> (f64, f64) {
     if nref == 0 || nalt == 0 {
         return (1.0, 1.0);
@@ -66,7 +55,6 @@ pub fn hwe_exact(nref: u32, nalt: u32, nhet: u32) -> (f64, f64) {
         het += 2;
     }
 
-    // Normalize.
     for p in &mut probs {
         *p /= sum;
     }
