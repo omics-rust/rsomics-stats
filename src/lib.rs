@@ -6,13 +6,15 @@
     clippy::missing_panics_doc,
     clippy::many_single_char_names,
     clippy::float_cmp,
-    clippy::similar_names
+    clippy::similar_names,
+    clippy::excessive_precision
 )]
 
 pub mod combine;
 pub mod fdr;
 pub mod hwe;
 pub mod hypothesis;
+pub mod special;
 
 pub use combine::{fisher_combine, stouffer_combine};
 pub use fdr::{
@@ -21,6 +23,7 @@ pub use fdr::{
 };
 pub use hwe::hwe_exact;
 pub use hypothesis::{Alternative, fisher_exact_2x2, mann_whitney_u, welch_t};
+pub use special::chi2_sf;
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
