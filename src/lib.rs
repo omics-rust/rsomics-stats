@@ -14,6 +14,7 @@ pub mod combine;
 pub mod fdr;
 pub mod hwe;
 pub mod hypothesis;
+pub mod normalization;
 pub mod special;
 
 pub use combine::{fisher_combine, stouffer_combine};
@@ -36,6 +37,10 @@ pub enum StatsError {
     ZeroVariance,
     #[error("p-value out of range: {0}")]
     InvalidPValue(f64),
+    #[error("invalid TMM input: {0}")]
+    InvalidTmmInput(&'static str),
+    #[error("TMM produced an invalid factor for sample {sample}: {value}")]
+    InvalidTmmFactor { sample: usize, value: f64 },
     #[error("statrs error: {0}")]
     Statrs(String),
 }

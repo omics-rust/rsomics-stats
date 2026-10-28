@@ -1,11 +1,13 @@
 [package]
 name = "rsomics-stats"
-version = "0.2.4"
-description = "Statistical tests, FDR control, p-value combination for the rsomics-* tool family. Layer A primitive."
+version = "0.2.5"
+description = "Statistical tests, FDR control, p-value combination and TMM normalization for the rsomics-* tool family."
 edition = "2024"
 rust-version = "1.91"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/omics-rust/rsomics-world"
+repository = "https://github.com/omics-rust/rsomics-stats"
+readme = "README.md"
+exclude = ["tests/normalization.rs", "tests/fixtures/pasilla-tmm/**"]
 authors = ["Zane Leong <efd@live.com>"]
 categories = ["science"]
 keywords = ["statistics", "bioinformatics", "fdr", "t-test", "mann-whitney"]
